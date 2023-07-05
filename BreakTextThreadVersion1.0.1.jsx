@@ -1,4 +1,4 @@
-﻿// Break Text Thread	BS"D
+﻿// Break Text Thread
 // Copyright (c) 2020 Ariel Walden, www.Id-Extras.com. All rights reserved.
 // This work is licensed under the terms of the MIT license.  
 // The full text of the license can be read here: <https://opensource.org/licenses/MIT>.
@@ -14,7 +14,7 @@
 //   1935-2019
 /////////////////////////////////////////////
 
-var gScriptName = "Break Text Thread Version 1.0.1 (by www.id-extras.com)";
+var gScriptName = "Break Text Thread Version 1.0.2 (by www.id-extras.com)";
 var gFrameCounter = 0;
 var gEndnoteCount = 0;
 var gSelectedStyle;
@@ -105,6 +105,15 @@ function main(){
 function breakThread(secondFrame, firstFrame){
 	var theStory, storyPrefs, firstPoint, lastPoint, textToCut, tempFrame;
 	theStory = secondFrame.parentStory;
+
+
+  	// Check if the last character is a Page Break character and remove it
+  	var pageBreakRegex = /\f$/;
+  	if (firstFrame.characters.length > 0 && pageBreakRegex.test(firstFrame.characters[-1].contents)) {
+    		var lastCharacter = firstFrame.characters[-1];
+    		lastCharacter.contents = lastCharacter.contents.replace(pageBreakRegex, "");
+  	}
+	
 	// If the next text frame is empty because there's no more text in the story, or, indeed, if there is no text in the entire story, simply break the link between the two frames and return.
 	if (firstFrame.insertionPoints.length == 0 || secondFrame.insertionPoints.length == 0){
 		firstFrame.nextTextFrame = null;
