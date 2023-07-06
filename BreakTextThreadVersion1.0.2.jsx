@@ -107,12 +107,14 @@ function breakThread(secondFrame, firstFrame){
 	theStory = secondFrame.parentStory;
 
 
-  	// Check if the last character is a Page Break character and remove it
-  	var pageBreakRegex = /\f$/;
-  	if (firstFrame.characters.length > 0 && pageBreakRegex.test(firstFrame.characters[-1].contents)) {
-    		var lastCharacter = firstFrame.characters[-1];
-    		lastCharacter.contents = lastCharacter.contents.replace(pageBreakRegex, "");
-  	}
+	// Get the last character of the first text frame
+	var lastChar = firstFrame.characters[-1];
+
+	// Check if the last character is a Page Break and remove it
+	if (lastChar && lastChar.contents === SpecialCharacters.PAGE_BREAK) {
+		lastChar.remove();
+	}
+
 	
 	// If the next text frame is empty because there's no more text in the story, or, indeed, if there is no text in the entire story, simply break the link between the two frames and return.
 	if (firstFrame.insertionPoints.length == 0 || secondFrame.insertionPoints.length == 0){
