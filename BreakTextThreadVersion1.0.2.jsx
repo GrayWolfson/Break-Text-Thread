@@ -107,15 +107,6 @@ function breakThread(secondFrame, firstFrame){
 	theStory = secondFrame.parentStory;
 
 
-	// Get the last character of the first text frame
-	var lastChar = firstFrame.characters[-1];
-
-	// Check if the last character is a Page Break and remove it
-	if (lastChar && lastChar.contents === SpecialCharacters.PAGE_BREAK) {
-		lastChar.remove();
-	}
-
-	
 	// If the next text frame is empty because there's no more text in the story, or, indeed, if there is no text in the entire story, simply break the link between the two frames and return.
 	if (firstFrame.insertionPoints.length == 0 || secondFrame.insertionPoints.length == 0){
 		firstFrame.nextTextFrame = null;
@@ -128,10 +119,12 @@ function breakThread(secondFrame, firstFrame){
 	tempFrame = document.textFrames.add();
 	textToCut.move(LocationOptions.atBeginning, tempFrame);
 	firstFrame.nextTextFrame = null;
-	// Now that the first frame is the last frame in its story, we can remove any final returns or column-break characters at the end of the last paragraph.
+	
+	// Now that the first frame is the last frame in its story, we can remove any final returns, column-break or page-break characters at the end of the last paragraph.
 	if (firstFrame.parentStory.characters.length > 0){
-		if (firstFrame.parentStory.characters[-1].contents == "\r" || firstFrame.parentStory.characters[-1].contents == SpecialCharacters.COLUMN_BREAK){
-			firstFrame.parentStory.characters[-1].contents = "";
+		var lastChar = firstFrame.parentStory.characters[-1];
+		if (lastChar.contents == "\r" || lastChar.contents == SpecialCharacters.COLUMN_BREAK || lastChar.contents == SpecialCharacters.PAGE_BREAK){
+		lastChar.remove();
 		}
 	}
 	tempFrame.nextTextFrame = secondFrame;
